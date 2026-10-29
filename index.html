@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap">
 <style>
-/* Layout: boxed two-column hero, then sections with a sticky serif label on the left and black-outlined boxes on the right. Pure black on white. */
+/* Layout: pinned profile card on the left, scrolling sections of black-outlined boxes on the right. Pure black on white. */
 :root {
   --bg: #ffffff;
   --fg: #0d0d0d;
@@ -32,66 +32,48 @@ body {
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 0;
 }
-section { scroll-margin-top: 80px; }
 
-/* Navigation */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
-  z-index: 1000;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
+/* Two-column layout: profile card pinned on the left, everything else scrolls on the right */
+.layout {
+  max-width: 1240px; margin: 0 auto;
+  display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 56px; align-items: start;
+  padding-top: calc(28px + env(safe-area-inset-top, 0px)); padding-bottom: 24px;
 }
-.nav-container {
-  max-width: 1120px; margin: 0 auto;
-  display: flex; justify-content: space-between; align-items: center; gap: 24px;
-  padding-block: 13px;
-}
-.nav-logo { font-family: var(--font-head); font-size: 1.35rem; font-weight: 600; white-space: nowrap; letter-spacing: -.01em; }
-.nav-links { display: flex; gap: 22px; list-style: none; min-width: 0; overflow-x: auto; scrollbar-width: none; }
-.nav-links::-webkit-scrollbar { display: none; }
-.nav-links a {
-  color: var(--fg); text-decoration: none; white-space: nowrap;
-  font-family: var(--font-mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase;
-  padding-block: 4px; border-bottom: 2px solid transparent;
-}
-.nav-links a:hover, .nav-links a:focus-visible { border-bottom-color: var(--fg); }
-
-.container { max-width: 1120px; margin: 0 auto; padding-top: calc(92px + env(safe-area-inset-top, 0px)); padding-bottom: 24px; }
-
-/* Hero */
-header {
-  display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 44px; align-items: center;
-  border: 1.5px solid var(--line); padding: 40px; margin-bottom: 64px;
+.profile {
+  position: sticky; top: calc(28px + env(safe-area-inset-top, 0px)); align-self: start;
+  max-height: calc(100vh - 56px); max-height: calc(100dvh - 56px); overflow-y: auto;
+  border: 1.5px solid var(--line); padding: 26px; background: var(--bg);
+  scrollbar-width: thin;
 }
 .profile-picture {
-  width: 100%; max-width: 250px; aspect-ratio: 1 / 1; object-fit: cover; display: block;
-  border: 1.5px solid var(--line); box-shadow: 8px 8px 0 var(--line);
+  width: 100%; max-width: 190px; aspect-ratio: 1 / 1; object-fit: cover; display: block;
+  border: 1.5px solid var(--line); box-shadow: 7px 7px 0 var(--line); margin: 0 0 24px 4px;
 }
-.eyebrow { font-family: var(--font-mono); font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-h1 { font-family: var(--font-head); font-weight: 500; font-size: 3.4rem; line-height: 1.05; letter-spacing: -.02em; margin-bottom: 14px; text-wrap: balance; }
-.subtitle { font-size: 1.1rem; font-weight: 600; }
-.hero-text p { margin-top: 4px; }
-.interests { margin-top: 18px !important; max-width: 60ch; color: var(--muted); border-top: 1px solid var(--hair); padding-top: 14px; }
+.eyebrow { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+h1 { font-family: var(--font-head); font-weight: 500; font-size: 2.35rem; line-height: 1.05; letter-spacing: -.02em; margin-bottom: 12px; text-wrap: balance; }
+.subtitle { font-size: 1rem; font-weight: 600; line-height: 1.4; }
+.profile p { margin-top: 4px; font-size: .95rem; }
+.interests { margin-top: 16px !important; color: var(--muted); border-top: 1px solid var(--hair); padding-top: 14px; font-size: .9rem !important; }
 .interests strong { color: var(--fg); font-weight: 600; }
-.contact-info { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+.contact-info { display: grid; gap: 8px; margin-top: 18px; }
 .contact-info a, .contact-info .plain {
-  font-family: var(--font-mono); font-size: .8rem; color: var(--fg); text-decoration: none;
-  padding: 6px 12px; border: 1px solid var(--line); background: var(--bg); overflow-wrap: anywhere;
+  font-family: var(--font-mono); font-size: .76rem; color: var(--fg); text-decoration: none;
+  padding: 6px 10px; border: 1px solid var(--line); background: var(--bg); overflow-wrap: anywhere;
 }
 .contact-info a:hover, .contact-info a:focus-visible { background: var(--fg); color: var(--bg); }
+.side-nav { list-style: none; margin-top: 20px; border-top: 1px solid var(--hair); padding-top: 14px; display: grid; gap: 1px; }
+.side-nav a {
+  display: block; color: var(--fg); text-decoration: none;
+  font-family: var(--font-mono); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 0 4px 12px; border-left: 2px solid transparent;
+}
+.side-nav a:hover, .side-nav a:focus-visible { border-left-color: var(--fg); padding-left: 16px; }
+.side-nav a { transition: padding .15s; }
 
 /* Sections */
-.section {
-  display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 36px;
-  border-top: 2px solid var(--line); padding-top: 26px; margin-bottom: 60px;
-}
-h2 {
-  font-family: var(--font-head); font-weight: 500; font-size: 1.75rem; line-height: 1.15; letter-spacing: -.01em;
-  align-self: start; position: sticky; top: calc(88px + env(safe-area-inset-top, 0px)); text-wrap: balance;
-}
+.section { border-top: 2px solid var(--line); padding-top: 22px; margin-bottom: 56px; scroll-margin-top: calc(28px + env(safe-area-inset-top, 0px)); }
+.section:first-of-type { margin-top: 0; }
+h2 { font-family: var(--font-head); font-weight: 500; font-size: 1.9rem; line-height: 1.15; letter-spacing: -.01em; margin-bottom: 20px; text-wrap: balance; }
 .content { min-width: 0; }
 
 .item {
@@ -150,17 +132,17 @@ h2 {
 footer { border-top: 2px solid var(--line); padding: 22px 0 10px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-family: var(--font-mono); font-size: .78rem; color: var(--muted); }
 a:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
 
-@media (max-width: 860px) {
-  .section { grid-template-columns: minmax(0, 1fr); gap: 18px; }
-  h2 { position: static; }
+@media (max-width: 960px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .profile { position: static; max-height: none; overflow: visible; }
+  .side-nav { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+  .side-nav a { padding-left: 0; border-left: 0; border-bottom: 2px solid transparent; }
+  .side-nav a:hover, .side-nav a:focus-visible { padding-left: 0; border-bottom-color: var(--fg); }
 }
 @media (max-width: 700px) {
-  header { grid-template-columns: minmax(0, 1fr); padding: 28px 20px; gap: 28px; margin-bottom: 44px; }
-  .profile-picture { max-width: 220px; }
-  h1 { font-size: 2.5rem; }
+  h1 { font-size: 2.2rem; }
   .item { padding: 18px 16px; }
   .section { margin-bottom: 44px; }
-  .nav-links { gap: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -171,11 +153,22 @@ a:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
 
 </head>
 <body>
-<nav>
-  <div class="nav-container">
-    <div class="nav-logo">Fariaz Islam</div>
-    <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
+<div class="layout">
+  <aside class="profile" id="home">
+    <img src="https://raw.githubusercontent.com/Fariaz99cuet/fariaz99cuet.github.io/main/MD%20Fariaz%20Islam.jpg" alt="Md. Fariaz Islam" class="profile-picture" width="190" height="190">
+    <p class="eyebrow">Researcher &middot; Dhaka, Bangladesh</p>
+    <h1>Md. Fariaz Islam</h1>
+    <p class="subtitle">B.Sc. in Electronics &amp; Telecommunication Engineering</p>
+    <p>Chittagong University of Engineering and Technology (CUET)</p>
+    <p class="interests"><strong>Research interests:</strong> in-memory computing, EDA / VLSI design automation, AI accelerators, embedded non-volatile memory (eNVM).</p>
+    <div class="contact-info">
+      <span class="plain">fariazislam99@gmail.com</span>
+      <span class="plain">+880 1833-379250</span>
+      <a href="https://www.researchgate.net/profile/Fariaz-Islam-2" target="_blank" rel="noopener">ResearchGate</a>
+      <a href="https://www.linkedin.com/in/md-fariaz-islam-5207971ab/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/Fariaz99cuet" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <ul class="side-nav">
       <li><a href="#education">Education</a></li>
       <li><a href="#research">Research</a></li>
       <li><a href="#papers">Publications</a></li>
@@ -185,28 +178,9 @@ a:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
       <li><a href="#courses">Courses</a></li>
       <li><a href="#leadership">Leadership</a></li>
     </ul>
-  </div>
-</nav>
+  </aside>
 
-<div class="container">
-  <header id="home">
-    <img src="https://raw.githubusercontent.com/Fariaz99cuet/fariaz99cuet.github.io/main/MD%20Fariaz%20Islam.jpg" alt="Md. Fariaz Islam" class="profile-picture" width="250" height="250">
-    <div class="hero-text">
-      <p class="eyebrow">Researcher &middot; Dhaka, Bangladesh</p>
-      <h1>Md. Fariaz Islam</h1>
-      <p class="subtitle">B.Sc. in Electronics &amp; Telecommunication Engineering</p>
-      <p>Chittagong University of Engineering and Technology (CUET)</p>
-      <p class="interests"><strong>Research interests:</strong> in-memory computing, EDA / VLSI design automation, AI accelerators, embedded non-volatile memory (eNVM).</p>
-      <div class="contact-info">
-        <span class="plain">fariazislam99@gmail.com</span>
-        <span class="plain">+880 1833-379250</span>
-        <a href="https://www.researchgate.net/profile/Fariaz-Islam-2" target="_blank" rel="noopener">ResearchGate</a>
-        <a href="https://www.linkedin.com/in/md-fariaz-islam-5207971ab/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://github.com/Fariaz99cuet" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </div>
-  </header>
-
+  <main class="main">
   <section id="education" class="section">
     <h2>Education</h2>
     <div class="content">
@@ -474,6 +448,7 @@ a:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
     <span>&copy; 2026 Md. Fariaz Islam</span>
     <span>Last updated October 2026</span>
   </footer>
+  </main>
 </div>
 </body>
 </html>
